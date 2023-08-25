@@ -28,12 +28,15 @@ enum WorkType {
   Break,
 }
 
+let ICON_PLAY = "play-circle-outline";
+let ICON_PAUSE = "pause-circle-outline";
+
 const initialdata = {
   title: "Work",
   count: defaultWork(),
   showCount: convertCount(defaultWork()),
   status: Status.Idle,
-  buttonName: "Start",
+  icon: ICON_PLAY,
   workType: WorkType.Work,
 }
 
@@ -95,7 +98,7 @@ function convertCount(count: number) : string {
 }
 
 function resetState(data: any) {
-  state.buttonName = data.buttonName;
+  state.icon = data.icon;
   state.status = data.status;
   state.count = data.count;
   state.showCount = data.showCount;
@@ -108,14 +111,14 @@ async function dispatch(action: any) {
     case Action.Pause:
       clearInterval(ticker);
       state.status = Status.Pause;
-      state.buttonName = "Start";
+      state.icon = ICON_PLAY;
       break;
     case Action.Reset:
       clearInterval(ticker);
       resetState(initialdata);
       break;
     case Action.Ready:
-      state.buttonName = "Pause";
+      state.icon = ICON_PAUSE;
       state.status = Status.Tick;
       break;
     case Action.Tick:
@@ -128,19 +131,19 @@ async function dispatch(action: any) {
           state.count = defaultWork();
           state.showCount = convertCount(defaultWork());
           state.status = Status.Idle;
-          state.buttonName = "Start";
+          state.icon = ICON_PLAY;
         } else {
           state.title = "Break";
           state.count = defaultBreak();
           state.showCount = convertCount(defaultBreak());
           state.status = Status.Idle;
-          state.buttonName = "Start";
+          state.icon = ICON_PLAY;
         }
         break;
       } else {
         state.count = action.count;
         state.showCount = convertCount(action.count);
-        state.buttonName = "Pause";
+        state.icon = ICON_PAUSE;
         break;
       }
   }
@@ -178,10 +181,10 @@ async function resetClick() {
       <h1 class="time">{{ state.showCount }}</h1>
     </div>
     <div class="start-op">
-      <button class="start" @click="startClick">{{ state.buttonName }}</button>
+      <mdicon class="icon" :name="state.icon" :width="26" :height="26" @click="startClick" />
     </div>
-    <div class="reset-op" v-if="state.status !== Status.Idle">
-      <button class="reset" @click="resetClick">Reset</button>
+    <div class="reset-op">
+      <mdicon class="icon" name="refresh-circle" :width="26" :height="26" @click="resetClick" />
     </div>
   </div>
 </template>
@@ -206,14 +209,14 @@ async function resetClick() {
 
 .start-op {
   position: absolute;
-  top: 4em;
-  right: 0.4em;
+  top: 3.8em;
+  right: 0.5em;
 }
 
 .reset-op {
   position: absolute;
-  top: 0;
-  right: 0.4em;
+  top: 0.2em;
+  right: 0.5em;
 }
 
 h1.time {
@@ -228,6 +231,10 @@ h4.title {
   padding: 0;
   line-height: 0.4;
   /* font-size: 1rem; */
+}
+
+.icon {
+  cursor: pointer;
 }
 
 </style>
