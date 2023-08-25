@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { readTextFile } from '@tauri-apps/api/fs';
 import { resolveResource } from '@tauri-apps/api/path';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, reactive } from 'vue';
 
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
@@ -28,6 +28,17 @@ enum WorkType {
   Break,
 }
 
+const initialdata = {
+  title: "Work",
+  count: defaultWork(),
+  showCount: convertCount(defaultWork()),
+  status: Status.Idle,
+  buttonName: "Start",
+  workType: WorkType.Work,
+}
+
+const state = reactive({ ...initialdata });
+
 onBeforeMount( async () => {
   const resourcePath = await resolveResource("resources/data.json");
   const data = JSON.parse(await readTextFile(resourcePath));
@@ -42,14 +53,14 @@ onBeforeMount( async () => {
 
 });
 
-function getDefaultWorkDuration() {
+function defaultWork() {
   if (localStorage.getItem("defaultWorkDuration") === null) {
     return 1500;
   }
   return Number(localStorage.getItem("defaultWorkDuration"));
 }
 
-function getDefaultBreakDuration() {
+function defaultBreak() {
   if (localStorage.getItem("defaultBreakDuration") === null) {
     return 300;
   }
@@ -83,31 +94,29 @@ function convertCount(count: number) : string {
   return (`${Math.floor(count / ONE_MINUTE)}:${Math.floor(count % ONE_MINUTE) < 10 ? "0" : ""}${count % ONE_MINUTE}`);
 }
 
-const initialdata = {
-  title: "Work",
-  count: getDefaultWorkDuration(),
-  showCount: convertCount(getDefaultWorkDuration()),
-  status: Status.Idle,
-  buttonName: "Start",
-  workType: WorkType.Work,
+function resetState(data: any) {
+  state.buttonName = data.buttonName;
+  state.status = data.status;
+  state.count = data.count;
+  state.showCount = data.showCount;
+  state.title = data.title;
+  state.workType = data.workType;
 }
-
-const showData = ref({ ...initialdata });
 
 async function dispatch(action: any) {
   switch (action.type) {
     case Action.Pause:
       clearInterval(ticker);
-      showData.value.status = Status.Pause;
-      showData.value.buttonName = "Start";
+      state.status = Status.Pause;
+      state.buttonName = "Start";
       break;
     case Action.Reset:
       clearInterval(ticker);
-      showData.value = { ...initialdata }
+      resetState(initialdata);
       break;
     case Action.Ready:
-      showData.value.buttonName = "Pause";
-      showData.value.status = Status.Tick;
+      state.buttonName = "Pause";
+      state.status = Status.Tick;
       break;
     case Action.Tick:
       console.info("Tick0");
@@ -115,51 +124,41 @@ async function dispatch(action: any) {
         console.info("Tick1");
         clearInterval(ticker);
         if (action.workType === WorkType.Work) {
-          showData.value = {
-            ...showData.value,
-            title: "Work",
-            count: getDefaultWorkDuration(),
-            showCount: convertCount(getDefaultWorkDuration()),
-            status: Status.Idle,
-            buttonName: "Start",
-          }
+          state.title = "Work";
+          state.count = defaultWork();
+          state.showCount = convertCount(defaultWork());
+          state.status = Status.Idle;
+          state.buttonName = "Start";
         } else {
-          showData.value = {
-            ...showData.value,
-            title: "Break",
-            count: getDefaultBreakDuration(),
-            showCount: convertCount(getDefaultBreakDuration()),
-            status: Status.Idle,
-            buttonName: "Start",
-          }
+          state.title = "Break";
+          state.count = defaultBreak();
+          state.showCount = convertCount(defaultBreak());
+          state.status = Status.Idle;
+          state.buttonName = "Start";
         }
         break;
       } else {
-        console.info("Tick2");
-        showData.value = {
-          ...showData.value,
-          count: action.count,
-          showCount: convertCount(action.count),
-          buttonName: "Pause",
-        };
+        state.count = action.count;
+        state.showCount = convertCount(action.count);
+        state.buttonName = "Pause";
         break;
       }
   }
 }
 
 async function startClick() {
-  if (showData.value.status === Status.Tick) {
+  if (state.status === Status.Tick) {
     dispatch({type: Action.Pause});
   } else {
     clearInterval(ticker);
     dispatch({type: Action.Ready});
     ticker = setInterval(() => {
-      showData.value.count -= 1;
-      if (showData.value.count < 0) {
-        showData.value.workType = showData.value.workType === WorkType.Work ? WorkType.Break : WorkType.Work;
+      state.count -= 1;
+      if (state.count < 0) {
+        state.workType = state.workType === WorkType.Work ? WorkType.Break : WorkType.Work;
       }
-      let count = showData.value.count;
-      let workType = showData.value.workType;
+      let count = state.count;
+      let workType = state.workType;
       dispatch({type: Action.Tick, count: count, workType: workType});
       // dispatch({type: Action.Tick, count: count, workType: workType});
     }, INTERVAL);
@@ -175,13 +174,13 @@ async function resetClick() {
 <template>
   <div class="container">
     <div class="content">
-      <h4 class="title">{{ showData.title }}</h4>
-      <h1 class="time">{{ showData.showCount }}</h1>
+      <h4 class="title">{{ state.title }}</h4>
+      <h1 class="time">{{ state.showCount }}</h1>
     </div>
     <div class="start-op">
-      <button class="start" @click="startClick">{{ showData.buttonName }}</button>
+      <button class="start" @click="startClick">{{ state.buttonName }}</button>
     </div>
-    <div class="reset-op" v-if="showData.status !== Status.Idle">
+    <div class="reset-op" v-if="state.status !== Status.Idle">
       <button class="reset" @click="resetClick">Reset</button>
     </div>
   </div>
