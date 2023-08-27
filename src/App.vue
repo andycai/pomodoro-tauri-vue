@@ -38,6 +38,7 @@ const initialdata = {
   status: Status.Idle,
   icon: ICON_PLAY,
   workType: WorkType.Work,
+  todayCount: getTodayCount(),
 }
 
 const state = reactive({ ...initialdata });
@@ -55,6 +56,24 @@ onBeforeMount( async () => {
   }
 
 });
+
+function convertDate() {
+  const date = new Date();
+  const key = `todayCount-${date.getFullYear()}${date.getMonth()+1}${date.getDate()}`;
+
+  return key;
+}
+
+function getTodayCount() {
+  if (localStorage.getItem(convertDate()) === null) {
+    return 0;
+  }
+  return Number(localStorage.getItem(convertDate()));
+}
+
+function updateTodayCount() {
+  localStorage.setItem(convertDate(), state.todayCount.toString());
+}
 
 function defaultWork() {
   if (localStorage.getItem("defaultWorkDuration") === null) {
@@ -138,6 +157,8 @@ async function dispatch(action: any) {
           state.showCount = convertCount(defaultBreak());
           state.status = Status.Idle;
           state.icon = ICON_PLAY;
+          state.todayCount += 1;
+          updateTodayCount();
         }
         break;
       } else {
@@ -180,6 +201,9 @@ async function resetClick() {
       <h4 class="title">{{ state.title }}</h4>
       <h1 class="time">{{ state.showCount }}</h1>
     </div>
+    <div class="today-count">
+      <mdicon class="icon" name="clock-outline" :width="26" :height="26" /><span style="vertical-align: sub;">x{{ state.todayCount }}</span>
+    </div>
     <div class="start-op">
       <mdicon class="icon" :name="state.icon" :width="26" :height="26" @click="startClick" />
     </div>
@@ -209,14 +233,23 @@ async function resetClick() {
 
 .start-op {
   position: absolute;
-  top: 3.8em;
-  right: 0.5em;
+  top: 3.8rem;
+  right: 0.5rem;
 }
 
 .reset-op {
   position: absolute;
-  top: 0.2em;
-  right: 0.5em;
+  top: 0.2rem;
+  right: 0.5rem;
+}
+
+.today-count {
+  position: absolute;
+  display: inline;
+  top: 3.8rem;
+  left: 0.5rem;
+  font-size: 0.8em;
+  font-weight: 500;
 }
 
 h1.time {
@@ -225,7 +258,7 @@ h1.time {
   line-height: 0.9;
   font-size: 4rem;
 }
-
+  
 h4.title {
   margin: 0;
   padding: 0;
