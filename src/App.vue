@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { readTextFile } from '@tauri-apps/api/fs'
 import { resolveResource } from '@tauri-apps/api/path'
-import { onBeforeMount, watch } from 'vue'
+import { onBeforeMount } from 'vue'
 import TimeCounterCom from './components/TimeCounterCom.vue'
 import TodayCountCom from './components/TodayCountCom.vue'
 import WorkTypeCom from './components/WorkTypeCom.vue'
 import OperactionCom from './components/OperactionCom.vue'
 import RefreshCom from './components/RefreshCom.vue'
-import { DefaultWorkDuration, INTERVAL, Keys, Status, Tasks, dataJsonURL } from './config'
+import { DefaultWorkDuration, Keys, Tasks, dataJsonURL } from './config'
 import { getIntDefault, initItem } from './store/local'
 import { storeToRefs } from 'pinia'
 import appStore from './store'
@@ -25,18 +25,6 @@ onBeforeMount( async () => {
   const data = JSON.parse(await readTextFile(resourcePath));
   initItem(Keys.defaultWorkDuration, data.defaultWorkDuration.toString())
   initItem(Keys.defaultBreakDuration, data.defaultBreakDuration.toString())
-})
-
-const { status } = storeToRefs(appStore.main)
-const { countdown } = appStore.main
-let id: any
-
-watch(status, (newValue, oldValue) => {
-  console.log(newValue, oldValue)
-  clearInterval(id)
-  if (newValue === Status.Tick) {
-    id = setInterval(countdown, INTERVAL)
-  }
 })
 
 </script>

@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { DefaultBreakDuration, DefaultWorkDuration, Keys, Status, Tasks, WorkType } from '../config'
+import { DefaultBreakDuration, DefaultWorkDuration, INTERVAL, Keys, Status, Tasks, WorkType } from '../config'
 import { getIntDefault, saveItem } from './local'
 import { convertTimeString } from '../utils'
 import { ClassContainer, TextColors } from '../style'
@@ -29,6 +29,7 @@ export const useMainStore = defineStore('main', () => {
   const daykey = ref<string>(Keys.today())
   const today = ref<number>(0)
   const total = ref<number>(0)
+  let id: any
 
   const timeShow = computed(() => {
     return convertTimeString(count.value)
@@ -43,7 +44,7 @@ export const useMainStore = defineStore('main', () => {
   })
 
   watch(today, (newValue, oldValue) => {
-    console.log("watch today", newValue, oldValue)
+    // console.log("watch today", newValue, oldValue)
     if (newValue > 0) {
       if (daykey.value === Keys.today()) { // 当天
         saveItem(daykey.value, newValue.toString())
@@ -55,9 +56,17 @@ export const useMainStore = defineStore('main', () => {
   })
   
   watch(total, (newValue, oldValue) => {
-    console.log("watch total", newValue, oldValue)
+    // console.log("watch total", newValue, oldValue)
     if (newValue > 0) {
       saveItem(Keys.total(Tasks.default), newValue.toString())
+    }
+  })
+
+  watch(status, (newValue, oldValue) => {
+    // console.log(newValue, oldValue)
+    clearInterval(id)
+    if (newValue === Status.Tick) {
+      id = setInterval(countdown, INTERVAL)
     }
   })
 
