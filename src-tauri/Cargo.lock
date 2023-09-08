@@ -2399,8 +2399,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "pomodoro2"
-version = "0.0.0"
+name = "pomodoro"
+version = "0.2.0"
 dependencies = [
  "serde",
  "serde_json",

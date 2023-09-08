@@ -1,6 +1,6 @@
 [package]
-name = "pomodoro2"
-version = "0.0.0"
+name = "pomodoro"
+version = "0.2.0"
 description = "A Tauri App"
 authors = ["you"]
 license = ""
