@@ -2,7 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { DefaultBreakDuration, DefaultWorkDuration, INTERVAL, Keys, Status, Tasks, WorkType } from '../config'
 import { getIntDefault, saveItem } from './local'
-import { convertTimeString } from '../utils'
+import { convertMinuteString, convertSecondString, playAudio, playEndAudio } from '../utils'
 import { ClassContainer, TextColors } from '../style'
 
 // type State = {
@@ -31,8 +31,12 @@ export const useMainStore = defineStore('main', () => {
   const total = ref<number>(0)
   let id: any
 
-  const timeShow = computed(() => {
-    return convertTimeString(count.value)
+  const minuteShow = computed(() => {
+    return convertMinuteString(count.value)
+  })
+
+  const secondShow = computed(() => {
+    return convertSecondString(count.value)
   })
 
   const classContainer = computed(() => {
@@ -68,6 +72,8 @@ export const useMainStore = defineStore('main', () => {
     if (newValue === Status.Tick) {
       id = setInterval(countdown, INTERVAL)
     }
+    playAudio(newValue === Status.Tick)
+    playEndAudio(newValue === Status.Idle)
   })
 
   function initData(ptoday:number, ptotal:number, pcount:number) {
@@ -116,5 +122,5 @@ export const useMainStore = defineStore('main', () => {
     workType.value = WorkType.Work
   }
 
-  return { count, status, workType, daykey, today, total, timeShow, classContainer, initData, updateDaykey, updateToday, countdown, tick, reset }
+  return { count, status, workType, daykey, today, total, minuteShow, secondShow, classContainer, initData, updateDaykey, updateToday, countdown, tick, reset }
 })

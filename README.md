@@ -1,11 +1,17 @@
 # pomodoro
 A simple pomodoro timer write in Tauri and Vue3.
 
+[Click to Download](https://github.com/andycai/pomodoro/releases)
+
+- [macOs](https://github.com/andycai/pomodoro/releases/download/untagged-d5e625351bf1791ac87f/Pomodoro_0.6.0_x64.dmg)
+- [Windows](https://github.com/andycai/pomodoro/releases/download/untagged-d5e625351bf1791ac87f/Pomodoro_0.6.0_x64-setup.exe)
+- [Linux](https://github.com/andycai/pomodoro/releases/download/untagged-d5e625351bf1791ac87f/pomodoro_0.6.0_amd64.deb)
+
 ## Screenshots
 
-<img src="./screenshots/screenshot.png" width="332" height="142" alt="Screenshot of Pomodoro">
+<img src="./screenshots/screenshot.png" width="140" height="184" alt="Screenshot of Pomodoro">
 
-<img src="./screenshots/screenshot_break.png" width="332" height="152" alt="Screenshot of Pomodoro">
+<img src="./screenshots/screenshot_break.png" width="140" height="184" alt="Screenshot of Pomodoro">
 
 # Tauri + Vue 3 + TypeScript
 
@@ -18,8 +24,6 @@ This template should help get you started developing with Vue 3 and TypeScript i
 ## Install Tauri support
 
 ```bash
-npm create tauri-app@latest
-npm install --save-dev @tauri-apps/cli@latest
 npm install
 ```
 

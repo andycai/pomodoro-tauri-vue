@@ -4,13 +4,14 @@ import { resolveResource } from '@tauri-apps/api/path'
 import { onBeforeMount } from 'vue'
 import TimeCounterCom from './components/TimeCounterCom.vue'
 import TodayCountCom from './components/TodayCountCom.vue'
-import WorkTypeCom from './components/WorkTypeCom.vue'
 import OperactionCom from './components/OperactionCom.vue'
 import RefreshCom from './components/RefreshCom.vue'
-import { DefaultWorkDuration, Keys, Tasks, dataJsonURL } from './config'
+import { DefaultWorkDuration, Keys, Tasks, dataJsonURL, diAudioPaths, endAudioPaths } from './config'
 import { getIntDefault, initItem } from './store/local'
 import { storeToRefs } from 'pinia'
 import appStore from './store'
+import { convertFileSrc } from "@tauri-apps/api/tauri"
+import { addAudio, addEndAudio } from './utils'
 
 const { classContainer } = storeToRefs(appStore.main)
 const { initData } = appStore.main
@@ -25,6 +26,19 @@ onBeforeMount( async () => {
   const data = JSON.parse(await readTextFile(resourcePath));
   initItem(Keys.defaultWorkDuration, data.defaultWorkDuration.toString())
   initItem(Keys.defaultBreakDuration, data.defaultBreakDuration.toString())
+
+  for (let v of diAudioPaths) {
+    // console.log("path: ", v)
+    const audioPath = await resolveResource(v)
+    const audio = new Audio(convertFileSrc(audioPath))
+    audio.loop = true
+    addAudio(v, audio)
+  }
+
+  for (let v of endAudioPaths) {
+    const audioPath = await resolveResource(v)
+    addEndAudio(v, new Audio(convertFileSrc(audioPath)))
+  }
 })
 
 </script>
@@ -35,11 +49,10 @@ onBeforeMount( async () => {
       <TimeCounterCom />
       <div className="flex flex-row justify-center">
         <TodayCountCom />
-        <div className="flex flex-row flex-1 grow justify-center space-x-1">
-          <OperactionCom />
+        <div className="flex flex-row flex-1 grow justify-end space-x-1 mr-2">
           <RefreshCom />
+          <OperactionCom />
         </div>
-        <WorkTypeCom />
       </div>
     </div>
   </div>

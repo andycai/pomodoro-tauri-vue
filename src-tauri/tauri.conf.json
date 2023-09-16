@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Pomodoro",
-    "version": "0.4.0"
+    "version": "0.6.0"
   },
   "tauri": {
     "allowlist": {
@@ -31,45 +31,16 @@
           "$RESOURCE/*/*"
         ]
       },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**"]
+      },
       "shell": {
         "all": false,
         "open": true
       },
       "window": {
-        "all": true,
-        "center": false,
-        "close": false,
-        "create": false,
-        "hide": false,
-        "maximize": false,
-        "minimize": false,
-        "print": false,
-        "requestUserAttention": false,
-        "setAlwaysOnTop": true,
-        "setClosable": false,
-        "setContentProtected": false,
-        "setCursorGrab": false,
-        "setCursorIcon": false,
-        "setCursorPosition": false,
-        "setCursorVisible": false,
-        "setDecorations": false,
-        "setFocus": false,
-        "setFullscreen": false,
-        "setIcon": false,
-        "setIgnoreCursorEvents": false,
-        "setMaxSize": false,
-        "setMaximizable": false,
-        "setMinSize": false,
-        "setMinimizable": false,
-        "setPosition": false,
-        "setResizable": false,
-        "setSize": false,
-        "setSkipTaskbar": false,
-        "setTitle": false,
-        "show": false,
-        "startDragging": false,
-        "unmaximize": false,
-        "unminimize": false
+        "all": true
       }
     },
     "bundle": {
@@ -91,16 +62,22 @@
     "security": {
       "csp": null
     },
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
     "windows": [
       {
+        "label": "main",
         "fullscreen": false,
         "resizable": false,
+        "decorations": false,
         "alwaysOnTop": true,
         "contentProtected": false,
         "fileDropEnabled": false,
         "title": "Pomodoro",
-        "width": 332,
-        "height": 130
+        "width": 140,
+        "height": 184 
       }
     ]
   }
