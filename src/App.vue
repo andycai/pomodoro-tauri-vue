@@ -12,6 +12,7 @@ import { storeToRefs } from 'pinia'
 import appStore from './store'
 import { convertFileSrc } from "@tauri-apps/api/tauri"
 import { addAudio, addEndAudio } from './utils'
+import { appWindow } from '@tauri-apps/api/window'
 
 const { classContainer } = storeToRefs(appStore.main)
 const { initData } = appStore.main
@@ -45,11 +46,12 @@ onBeforeMount( async () => {
 
 <template>
   <div :class="classContainer">
+    <mdicon name="close" class="cursor-pointer absolute right-0" @click="() => appWindow.close()" width="14" height="14" />
     <div className="flex flex-col">
       <TimeCounterCom />
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row justify-center mt-1">
         <TodayCountCom />
-        <div className="flex flex-row flex-1 grow justify-end space-x-1 mr-2">
+        <div className="flex flex-row flex-1 grow justify-end space-x-1 mr-1">
           <RefreshCom />
           <OperactionCom />
         </div>

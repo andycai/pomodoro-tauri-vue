@@ -6,7 +6,7 @@ import { computed } from 'vue';
 import { WorkType } from '../config';
 
 const { today, total, workType } = storeToRefs(appStore.main)
-const className = "flex flex-row flex-none ml-2 w-20"
+const className = "flex flex-row flex-none ml-1"
 console.log("render today count: ", today.value, total.value)
 
 const classIcon = computed(() => {
