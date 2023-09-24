@@ -9,9 +9,9 @@ A simple pomodoro timer write in Tauri and Vue3.
 
 ## Screenshots
 
-<img src="./screenshots/screenshot.png" width="140" height="184" alt="Screenshot of Pomodoro">
+<img src="./screenshots/screenshot.png" width="128" height="200" alt="Screenshot of Pomodoro">
 
-<img src="./screenshots/screenshot_break.png" width="140" height="184" alt="Screenshot of Pomodoro">
+<img src="./screenshots/screenshot_break.png" width="128" height="200" alt="Screenshot of Pomodoro">
 
 # Tauri + Vue 3 + TypeScript
 
