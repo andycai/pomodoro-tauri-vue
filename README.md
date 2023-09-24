@@ -24,17 +24,17 @@ This template should help get you started developing with Vue 3 and TypeScript i
 ## Install Tauri support
 
 ```bash
-npm install
+pnpm i
 ```
 
 ## run project
 
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ## Build project
 
 ```bash
-npm run tauri build
+pnpm run tauri build
 `````
