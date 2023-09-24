@@ -1,4 +1,5 @@
 import { ONE_MINUTE, diAudioPaths, endAudioPaths } from "./config";
+import { ClassContainer, TextColors } from "./style";
 
 export const convertMinuteString = (count: number) : string => {
   return (`${Math.floor(count / ONE_MINUTE) < 10 ? "0" : ""}${Math.floor(count / ONE_MINUTE)}`)
@@ -8,12 +9,18 @@ export const convertSecondString = (count: number) : string => {
   return (`${Math.floor(count % ONE_MINUTE) < 10 ? "0" : ""}${count % ONE_MINUTE}`)
 }
 
+export const convertThemeStyle = (index: number, colorIndex: number) : string => {
+  const arr = TextColors[index]??TextColors[1]
+  const color = arr[colorIndex]??arr[0]
+  return ClassContainer + color 
+}
+
 export const convertTimeString = (count: number) : string => {
   return (`${Math.floor(count / ONE_MINUTE)}:${Math.floor(count % ONE_MINUTE) < 10 ? "0" : ""}${count % ONE_MINUTE}`)
 }
 
-let audioObjs = new Map();
-let endAudioObjs = new Map();
+const audioObjs = new Map();
+const endAudioObjs = new Map();
 
 let currentAudioIndex = 0
 let currentEndAudioIndex = 0

@@ -3,7 +3,6 @@ import appStore from '../store';
 import { storeToRefs } from 'pinia';
 
 const { minuteShow, secondShow } = storeToRefs(appStore.main)
-// console.log("render TimeCounter", timeShow.value);
 
 </script>
 

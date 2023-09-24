@@ -2,33 +2,18 @@ import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { DefaultBreakDuration, DefaultWorkDuration, INTERVAL, Keys, Status, Tasks, WorkType } from '../config'
 import { getIntDefault, saveItem } from './local'
-import { convertMinuteString, convertSecondString, playAudio, playEndAudio } from '../utils'
-import { ClassContainer, TextColors } from '../style'
-
-// type State = {
-//   count: number
-//   status: Status
-//   workType: WorkType
-//   daykey: string
-//   today: number // 当天番茄钟
-//   total: number // 总番茄钟
-// }
+import { convertMinuteString, convertSecondString, convertThemeStyle, playAudio, playEndAudio } from '../utils'
+import { themeNum } from '../style'
 
 export const useMainStore = defineStore('main', () => {
-  // const state = reactive<State>({
-  //   count: getIntDefault(Keys.defaultWorkDuration, DefaultWorkDuration),
-  //   status: Status.Idle,
-  //   workType: WorkType.Work,
-  //   daykey: Keys.today(),
-  //   today: 0,
-  //   total: 0,
-  // })
   const count = ref<number>(getIntDefault(Keys.defaultWorkDuration, DefaultWorkDuration))
   const status = ref<Status>(Status.Idle)
   const workType = ref<WorkType>(WorkType.Work)
   const daykey = ref<string>(Keys.today())
   const today = ref<number>(0)
   const total = ref<number>(0)
+  const themeIndex = ref<number>(0)
+
   let id: any
 
   const minuteShow = computed(() => {
@@ -39,16 +24,11 @@ export const useMainStore = defineStore('main', () => {
     return convertSecondString(count.value)
   })
 
-  const classContainer = computed(() => {
-    const index = Math.floor(today.value / 4)
-    const arr = TextColors[workType.value]??TextColors[1]
-    const color = arr[index]??arr[4]
-    // console.log("color", index, color)
-    return ClassContainer + color 
+  const themeStyle = computed(() => {
+    return convertThemeStyle(1, themeIndex.value % themeNum)
   })
 
-  watch(today, (newValue, oldValue) => {
-    // console.log("watch today", newValue, oldValue)
+  watch(today, (newValue) => {
     if (newValue > 0) {
       if (daykey.value === Keys.today()) { // 当天
         saveItem(daykey.value, newValue.toString())
@@ -59,15 +39,13 @@ export const useMainStore = defineStore('main', () => {
     }
   })
   
-  watch(total, (newValue, oldValue) => {
-    // console.log("watch total", newValue, oldValue)
+  watch(total, (newValue) => {
     if (newValue > 0) {
       saveItem(Keys.total(Tasks.default), newValue.toString())
     }
   })
 
-  watch(status, (newValue, oldValue) => {
-    // console.log(newValue, oldValue)
+  watch(status, (newValue) => {
     clearInterval(id)
     if (newValue === Status.Tick) {
       id = setInterval(countdown, INTERVAL)
@@ -106,6 +84,8 @@ export const useMainStore = defineStore('main', () => {
       return
     }
     count.value--
+    themeIndex.value++
+    themeIndex.value = themeIndex.value % themeNum
   }
 
   function tick() {
@@ -122,5 +102,13 @@ export const useMainStore = defineStore('main', () => {
     workType.value = WorkType.Work
   }
 
-  return { count, status, workType, daykey, today, total, minuteShow, secondShow, classContainer, initData, updateDaykey, updateToday, countdown, tick, reset }
+  function changeTheme() {
+    themeIndex.value = (themeIndex.value + 1) % themeNum
+  }
+
+  return { 
+    count, status, workType, daykey, today, total,
+    minuteShow, secondShow, themeStyle, 
+    initData, updateDaykey, updateToday, countdown, tick, reset, changeTheme
+  }
 })
