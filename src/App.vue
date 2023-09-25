@@ -9,14 +9,12 @@ import TimeCounter from './components/TimeCounter.vue'
 import { DefaultWorkDuration, Keys, Tasks, dataJsonURL, diAudioPaths, endAudioPaths } from './config'
 import { addAudio, addEndAudio } from './utils'
 import { getIntDefault, initItem } from './store/local'
-import appStore from './store'
-import { storeToRefs } from 'pinia'
+import { useMainStore } from './store/main'
 
-const { changeTheme, initData } = appStore.main
-const { themeStyle } = storeToRefs(appStore.main)
+const store = useMainStore()
 
 onBeforeMount( async () => {
-  initData(
+  store.initData(
     getIntDefault(Keys.today(), 0),
     getIntDefault(Keys.total(Tasks.default), 0),
     getIntDefault(Keys.defaultWorkDuration, DefaultWorkDuration)
@@ -42,10 +40,10 @@ onBeforeMount( async () => {
 </script>
 
 <template>
-  <div :class="themeStyle">
+  <div :class="store.themeStyle">
     <Appbar />
     <TimeCounter />
-    <Footbar @change-theme="changeTheme" />
+    <Footbar @change-theme="store.changeTheme" />
   </div>
 </template>
 

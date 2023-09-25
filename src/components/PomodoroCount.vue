@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import appStore from '../store'
 import { changeAudio, playAudio } from '../utils';
 import { ref } from 'vue'
 import { Status } from '../config'
 import Volume from '../icons/volume.vue'
 import VolumeMute from '../icons/volume-mute.vue'
+import { useMainStore } from '../store/main';
 
-const { today, total, status } = storeToRefs(appStore.main)
+const store = useMainStore()
 
 const musicOff = ref(false)
 
 function change() {
-  if (status.value === Status.Tick) {
+  if (store.status === Status.Tick) {
     musicOff.value = !changeAudio()
     playAudio(!musicOff.value)
   }
@@ -29,5 +28,5 @@ function change() {
       <Volume :width="16" :height="16" />
     </template>
   </button>
-  <span class="text-xs pt-0">{{ total }}/{{ today }}</span>
+  <span class="text-xs pt-0">{{ store.total }}/{{ store.today }}</span>
 </template>

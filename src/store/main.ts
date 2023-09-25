@@ -12,7 +12,7 @@ export const useMainStore = defineStore('main', () => {
   const daykey = ref<string>(Keys.today())
   const today = ref<number>(0)
   const total = ref<number>(0)
-  const themeIndex = ref<number>(0)
+  const theme = ref<number>(0)
 
   let id: any
 
@@ -25,7 +25,7 @@ export const useMainStore = defineStore('main', () => {
   })
 
   const themeStyle = computed(() => {
-    return convertThemeStyle(1, themeIndex.value % themeNum)
+    return convertThemeStyle(workType.value, theme.value % themeNum)
   })
 
   watch(today, (newValue) => {
@@ -84,8 +84,6 @@ export const useMainStore = defineStore('main', () => {
       return
     }
     count.value--
-    themeIndex.value++
-    themeIndex.value = themeIndex.value % themeNum
   }
 
   function tick() {
@@ -103,7 +101,7 @@ export const useMainStore = defineStore('main', () => {
   }
 
   function changeTheme() {
-    themeIndex.value = (themeIndex.value + 1) % themeNum
+    theme.value = (theme.value + 1) % themeNum
   }
 
   return { 
@@ -112,3 +110,48 @@ export const useMainStore = defineStore('main', () => {
     initData, updateDaykey, updateToday, countdown, tick, reset, changeTheme
   }
 })
+
+/*
+
+// stores/counter.js
+import { defineStore } from 'pinia'
+
+export const useCounterStore = defineStore('counter', {
+  state: () => {
+    return { count: 0 }
+  },
+  // 也可以定义为
+  // state: () => ({ count: 0 })
+  actions: {
+    increment() {
+      this.count++
+    },
+  },
+})
+
+import { useCounterStore } from '@/stores/counter'
+
+export default {
+  setup() {
+    const counter = useCounterStore()
+
+    counter.count++
+    // 带自动补全 ✨
+    counter.$patch({ count: counter.count + 1 })
+    // 或使用 action 代替
+    counter.increment()
+  },
+}
+
+*/
+
+/*
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0)
+  function increment() {
+    count.value++
+  }
+
+  return { count, increment }
+})
+*/

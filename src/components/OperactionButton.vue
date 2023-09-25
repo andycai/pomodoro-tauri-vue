@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import appStore from '../store'
 import { Status } from '../config'
 import Pause from '../icons/pause.vue'
 import Play from '../icons/play.vue'
+import { useMainStore } from '../store/main'
 
-const { status } = storeToRefs(appStore.main)
-const { tick } = appStore.main 
+const store = useMainStore()
 
 </script>
 
 <template>
-    <button class="flex flex-row justify-center basis-1/2" title="Play or Pause" @click="tick">
-    <template v-if="status === Status.Tick">
+    <button class="flex flex-row justify-center basis-1/2" title="Play or Pause" @click="store.tick">
+    <template v-if="store.status === Status.Tick">
       <Pause :width="22" :height="22" />
     </template>
     <template v-else>
