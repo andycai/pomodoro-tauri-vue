@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { DefaultBreakDuration, DefaultWorkDuration, INTERVAL, Keys, Status, Tasks, WorkType } from '../config'
+import { DefaultBreakDuration, DefaultWorkDuration, INTERVAL, Keys, MagicNumber, Status, Tasks, WorkType } from '../config'
 import { getIntDefault, saveItem } from './local'
 import { convertMinuteString, convertSecondString, convertThemeStyle, playAudio, playEndAudio } from '../utils'
 import { themeNum } from '../style'
@@ -58,6 +58,7 @@ export const useMainStore = defineStore('main', () => {
     today.value = ptoday
     total.value = ptotal
     count.value = pcount
+    theme.value = Math.floor(ptoday / MagicNumber)
   }
 
   function updateDaykey(key: string) {
