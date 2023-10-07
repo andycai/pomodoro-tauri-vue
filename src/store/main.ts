@@ -74,6 +74,9 @@ export const useMainStore = defineStore('main', () => {
       if (workType.value === WorkType.Work) {
         today.value++
         total.value++
+        if (today.value % MagicNumber === 0) {
+          changeTheme()
+        }
         status.value = Status.Idle
         count.value = getIntDefault(Keys.defaultBreakDuration, DefaultBreakDuration)
         workType.value = WorkType.Break
