@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { changeAudio, playAudio } from '../utils';
+import { changeAudio, isMute, playAudio } from '../utils';
 import { ref } from 'vue'
 import { Status } from '../config'
 import Volume from '../icons/volume.vue'
@@ -12,7 +12,8 @@ const musicOff = ref(false)
 
 function change() {
   if (store.status === Status.Tick) {
-    musicOff.value = !changeAudio()
+    changeAudio()
+    musicOff.value = isMute() 
     playAudio(!musicOff.value)
   }
 }
