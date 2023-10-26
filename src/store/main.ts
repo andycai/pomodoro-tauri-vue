@@ -108,10 +108,19 @@ export const useMainStore = defineStore('main', () => {
     theme.value = (theme.value + 1) % themeNum
   }
 
+  function updateDuration() {
+      if (status.value == Status.Idle) {
+        if (workType.value == WorkType.Break) {
+          count.value = getIntDefault(Keys.defaultBreakDuration, DefaultBreakDuration)
+        }
+        count.value = getIntDefault(Keys.defaultWorkDuration, DefaultWorkDuration)
+      }
+  }
+
   return { 
     count, status, workType, daykey, today, total,
     minuteShow, secondShow, themeStyle, 
-    initData, updateDaykey, updateToday, countdown, tick, reset, changeTheme
+    initData, updateDaykey, updateToday, countdown, tick, reset, changeTheme, updateDuration
   }
 })
 
